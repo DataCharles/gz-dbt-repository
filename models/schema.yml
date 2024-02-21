@@ -5,8 +5,13 @@ sources:
     description: greenweez raw data source
     tables:
       - name: sales
+        freshness:
+          warn_after:
+            count: 90
+            period: day
+        loaded_at_field: "CAST(date_date AS TIMESTAMP)"
         identifier: raw_gz_sales
-        description: sales of greenweez / we have one row per products_id in each orders_id.
+        description: sales of greenweez
         tests:
           - unique:
               column_name: "(orders_id || '-' || pdt_id)"
@@ -29,4 +34,22 @@ sources:
             tests:
               - unique
               - not_null
-              
+
+      - name: adwords
+        identifier: raw_gz_adwords
+
+      - name: bing
+        identifier: raw_gz_bing
+
+      - name: criteo
+        identifier: raw_gz_criteo
+
+      - name: facebook
+        identifier: raw_gz_facebook
+
+models:
+ - name: int_campaigns 
+   description: data from all campaigns
+   tests:
+     - unique:
+        column_name: "date_date || '-' || campaign_key"
